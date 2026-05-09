@@ -316,8 +316,8 @@ for msg in st.session_state.chat:
 if st.session_state.thread_id is None:
     st.subheader("Start a new session")
 
-    subject = st.text_input("Subject", value="Education")
-    essay_topic = st.text_input("Essay topic", value="AI in education and creativity")
+    subject = st.text_input("Subject", value="Study")
+    essay_topic = st.text_input("Essay topic", value="Is it more important to choose to study subjects you are interested in than to choose subjects to prepare for a job or career?")
 
     if st.button("Start"):
         try:
