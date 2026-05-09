@@ -1,0 +1,52 @@
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    command: uvicorn bin.MultiAgentSystem.app:app --host 0.0.0.0 --port 8000 --workers 1
+    # ports:
+    #   - "443:8000"
+    volumes:
+      - ./bin:/app/bin
+      - ./pyproject.toml:/app/pyproject.toml:ro
+      - ./uv.lock:/app/uv.lock:ro
+    env_file:
+      - .env
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    command: streamlit run bin/MultiAgentSystem/front_end.py --server.port 8501 --server.address 0.0.0.0
+    # ports:
+    #   - "80:8501"
+    volumes:
+      - ./bin:/app/bin
+    env_file:
+      - .env
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - nginxproxymanager_default
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+  nginxproxymanager_default:
+    name: nginxproxymanager_default
+    external: true
