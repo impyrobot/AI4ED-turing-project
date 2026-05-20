@@ -155,6 +155,44 @@ To stop:
 docker compose down
 ```
 
+**Option 6: WrAFT — Writing Assessment & Feedback Tool**
+
+Requires Docker and Docker Compose. Run from the `wraft/` directory.
+
+1. Create the secrets file from the example:
+```bash
+cp wraft/.envs/.local/.secrets.example wraft/.envs/.local/.secrets
+```
+
+2. Fill in your API keys in `wraft/.envs/.local/.secrets`:
+```
+OPENAI_API_KEY=<finetuned 4o key — get from .env>
+ANTHROPIC_API_KEY=<your Anthropic key>
+```
+> **Note:** Both keys are required. `surface_correction` and `score` use the finetuned GPT-4o model; `macro_correction` and `micro_correction` use Claude 3.7 Sonnet.
+
+3. Build and start all services:
+```bash
+cd wraft
+make build-local
+make start-local
+```
+
+4. Initialise LLM configs and API keys in the database (first run only):
+```bash
+make init-data-local
+```
+
+5. Access the services:
+   - Frontend: http://localhost:5173
+   - Backend admin: http://localhost:8000/admin (user: `admin`, password: `MyPass123`)
+   - Email testing: http://localhost:8025
+
+To stop:
+```bash
+make stop-local
+```
+
 #### Project Structure
 
 ```
