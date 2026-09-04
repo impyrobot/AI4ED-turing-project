@@ -82,3 +82,5 @@ Thumbs.db
 MISC/
 TODO.md
 latex/
+__MACOSX/
+.DS_Store
